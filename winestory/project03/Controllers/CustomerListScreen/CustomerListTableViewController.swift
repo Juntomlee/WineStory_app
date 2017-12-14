@@ -32,8 +32,6 @@ class CustomerListTableViewController: UITableViewController {
         //FIREBASE//
         let reviewRef = ref.child("CustomerReview").queryOrdered(byChild: "vendorID").queryEqual(toValue: User.sharedInstance.email)
         reviewRef.observe(.value, with: { snapshot in
-            print(User.sharedInstance.uid)
-            print(snapshot.childrenCount)
             var newItems: [CustomerReview] = []
             for item in snapshot.children {
                 let reviewItem = CustomerReview(snapshot: item as! DataSnapshot)
@@ -59,7 +57,6 @@ class CustomerListTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "customerCell", for: indexPath) as! CustomerListTableViewCell
-
         cell.customerIDLabel.text = reviews[indexPath.row].customerID
         cell.customerReviewLabel.text = reviews[indexPath.row].review
         return cell

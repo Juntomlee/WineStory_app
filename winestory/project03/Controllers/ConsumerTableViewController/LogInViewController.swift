@@ -57,10 +57,6 @@ class LogInViewController: UIViewController, UITextFieldDelegate, GIDSignInUIDel
             let zipcodeField = alert.textFields![2]
             
             Auth.auth().createUser(withEmail: emailField.text!, password: passwordField.text!) { user, error in
-//                let addAlert = UIAlertController(title: "Error! what the fuck", message: error?.localizedDescription, preferredStyle: .alert)
-//
-//                addAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-//                self.present(addAlert, animated: true, completion: nil)
                 self.userZipcode = zipcodeField.text!
                 if error == nil {
                     //Initialize user data
@@ -69,14 +65,11 @@ class LogInViewController: UIViewController, UITextFieldDelegate, GIDSignInUIDel
                     User.sharedInstance.zipcode = zipcodeField.text!
                     let userRef = self.ref.child(user!.uid)
                     self.currentUser = ConsumerInfo(uid: (user?.uid)!, email: (user?.email)!,ref: self.ref, key: "", zipCode: self.userZipcode, favorite: ["chateau-pontet-canet-red-bordeaux-blend-pauillac-2011-10", "decoy-pinot-noir-sonoma-county-2011"], cart: ["chateau-pontet-canet-red-bordeaux-blend-pauillac-2011-10" : 2, "decoy-pinot-noir-sonoma-county-2011":3])
-//                    self.currentUser = ConsumerInfo(uid: (user?.uid)!, email: (user?.email)!,ref: self.ref, key: "", zipCode: "94089", favorite: ["n/a"], cart: ["n/a":0])
-//                    let userItem = ConsumerInfo(uid: user!.uid, email: user!.email!, ref: self.ref, key: "", zipCode: self.userZipcode, favorite: ["n/a"], cart: ["n/a" : 0])
-                    
+
                     userRef.setValue(self.currentUser?.toAnyObject())
                     
                     Auth.auth().signIn(withEmail: self.emailTextField.text!,
                                        password: self.passwordTextField.text!)
-//                    self.performSegue(withIdentifier: "LoginUser", sender: nil)
                 }
             }
         }
@@ -117,12 +110,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate, GIDSignInUIDel
                     User.sharedInstance.uid = (user?.uid)!
                     User.sharedInstance.email = (user?.email)!
                     //**** Need to check firebase if user exits**//
-                    
-//                    
-//                    self.currentUser = ConsumerInfo(uid: (user?.uid)!, email: (user?.email)!,ref: self.ref, key: "", zipCode: "94089", favorite: ["chateau-pontet-canet-red-bordeaux-blend-pauillac-2011-10", "decoy-pinot-noir-sonoma-county-2011"], cart: ["chateau-pontet-canet-red-bordeaux-blend-pauillac-2011-10" : 2, "decoy-pinot-noir-sonoma-county-2011":3])
-//                    let userUidRef = self.ref.child(user!.uid)
-//                    
-//                    userUidRef.setValue(self.currentUser?.toAnyObject())
+
                     self.performSegue(withIdentifier: "vendorView", sender: nil)
                     //Customer Login
                 } else if user?.email != "n/a"{
@@ -141,7 +129,6 @@ class LogInViewController: UIViewController, UITextFieldDelegate, GIDSignInUIDel
                             userItem = ConsumerInfo(snapshot: item as! DataSnapshot)
                             if userItem?.uid != nil {
                                 print("Hello there")
-//                                self.performSegue(withIdentifier: "LoginUser", sender: nil)
                             } else {
                                 self.currentUser = ConsumerInfo(uid: User.sharedInstance.uid, email: User.sharedInstance.email,ref: self.ref, key: "", zipCode: self.userZipcode, favorite: ["chateau-pontet-canet-red-bordeaux-blend-pauillac-2011-10", "decoy-pinot-noir-sonoma-county-2011"], cart: ["chateau-pontet-canet-red-bordeaux-blend-pauillac-2011-10" : 2, "decoy-pinot-noir-sonoma-county-2011":3])
                             }
@@ -173,7 +160,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate, GIDSignInUIDel
                     print("Error Here: \(err.localizedDescription)")
                     return
                 }
-                // if signInAnonymouslyWithCompletion: method completes without error, you can get the anonymous user's account data from the FIRUser object:
+     
                 if user!.isAnonymous {
                     // let uid = user!.uid
                     guard let text = self.zipCodeTextField.text else {
@@ -199,7 +186,6 @@ class LogInViewController: UIViewController, UITextFieldDelegate, GIDSignInUIDel
         continueButton.isEnabled = !text.isEmpty
     }
 
-    //TEXTFIELDDZ
     func textFieldDidBeginEditing(_ textField: UITextField) {
         continueButton.isEnabled = false
     }

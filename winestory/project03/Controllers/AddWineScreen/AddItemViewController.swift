@@ -13,24 +13,20 @@ import Foundation
 class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     // MARK: Properties
-    var wineData: WineInfo?
-    var wineList = [WineInfo]()
-    var review: Review?
-    var reviewList = [Review]()
+    var color = "red" // Default value
+    var downloadURL = String()
+    var imageName = String()
+    var items: [WineInfo] = []
     var myImage: UIImage? = #imageLiteral(resourceName: "noImage")
     var picker: UIImagePickerController? = UIImagePickerController()
-    var referenceVariable = false
-    
-    //MARK: Firebase Variables
-    var items: [WineInfo] = []
     var ref = Database.database().reference()
-    var downloadURL = String()
-    var thumbnailURL = String()
-    var color = "red" // Default value
-    var imageName = String()
+    var referenceVariable = false
+    var review: Review?
+    var reviewList = [Review]()
     var shortURL = String()
-    
-    //MARK: TinEye WID
+    var thumbnailURL = String()
+    var wineData: WineInfo?
+    var wineList = [WineInfo]()
     var WID = "NA"
     
     //MARK: Outlets
@@ -112,10 +108,10 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
         }))
         
         addAlert.addAction(UIAlertAction(title: "Cancel", style: .destructive, handler: nil))
-        
         self.present(addAlert, animated: true, completion: nil)
     }
     
+    // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Add Item"
@@ -395,14 +391,12 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     // Get reference image from TinEye
     func getReferenceImage(_ wineID: String) {
-        print("Reference Image fetching start")
         let credential = ""
         let tinEyeImageURL = "https://\(credential)@wineengine.tineye.com/designsprintschool.com/collection/?filepath=\(WID)"
         let url = URL(string: tinEyeImageURL)
         let savedImage = try? Data(contentsOf: url!)
         myImage = UIImage(data: savedImage!)!
         DispatchQueue.main.async {
-            print("Fetching Image uploading start")
             self.uploadImage()
         }
     }
@@ -426,7 +420,7 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
                 return
             }
             
-            // Process the Response...
+            // Process the Response
             if error == nil,let usableData = data {
                 print("JSON Received...File Size: \(usableData) \n")
                 //ready for JSONSerialization
@@ -440,7 +434,6 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
                                     for file in result {
                                         if let value = file["filepath"]{
                                             self.WID = (value as! String)
-                                            print("@@@@@@@@@@",self.WID, "@@@@@@@@@@")
                                             self.getWineInfo()
                                             self.getReferenceImage(self.WID)
                                             self.referenceVariable = true
@@ -475,7 +468,6 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
             for item in snapshot.children {
                 let wineItem = WineInfo(snapshot: item as! DataSnapshot)
                 selectedItem = wineItem
-                print("++++++++++++++\(selectedItem?.name)+++++++++++++++")
                 self.wineData = selectedItem
                 self.loadData()
             }
@@ -484,6 +476,7 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     //Shorten URL using tinyURL API
     func shortenURL() {
+        // Properties
         let originalURL = downloadURL
         let apikey = ""
         let urlString = "http://tiny-url.info/api/v1/create?url=\(originalURL)&provider=bit_ly&format=json&apikey=\(apikey)"
@@ -499,7 +492,6 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
                     let object = try JSONSerialization.jsonObject(with: usableData, options: .allowFragments)
                     if let dictionary = object as? [String:AnyObject]{
                         self.shortURL = dictionary["shorturl"] as! String
-                        print("@@@@@@@@@@", self.shortURL, "@@@@@@@@@@")
                         DispatchQueue.main.async {
                             self.checkLabel()
                         }
@@ -515,18 +507,18 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     func getWineInfo(){
-        //Wine variables
-        var name = String()
-        var vintage = String()
-        var code = String()
-        var wineType = String()
+        // Properties
+        let apikey = ""
         var avgPrice = String()
+        var code = String()
+        var name = String()
         var rank = Double()
-        var winery = String()
         var region = String()
         var summary = String()
-        
-        let apikey = ""
+        var vintage = String()
+        var winery = String()
+        var wineType = String()
+
         let urlString = "http://api.snooth.com/wine/?id=\(WID)&akey=\(apikey)"
 
         let requestUrl = URL(string:urlString)
@@ -537,7 +529,6 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
             if error == nil,let usableData = data {
                 print("JSON Received...File Size: \(usableData) \n")
                 do {
-                    // Serialize....
                     let object = try JSONSerialization.jsonObject(with: usableData, options: .allowFragments)
             
                     if let dictionary = object as? [String: AnyObject]{
@@ -584,12 +575,12 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     func getReviews(){
-        //Review variables
+        // Properties
+        let apikey = ""
         var reviewer = String()
         var reviewBody = String()
         var rating = String()
         
-        let apikey = ""
         let urlString = "http://api.snooth.com/wine/?id=\(WID)&akey=\(apikey)"
         let requestUrl = URL(string:urlString)
         let request = URLRequest(url:requestUrl!)
@@ -636,8 +627,7 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
                             reviewRef.setValue(self.reviewList[i].toAnyObject())
                         }
                     }
-                    self.reviewList = [Review]()
-                    // Upload done
+                    self.reviewList.removeAll()
                 } catch {
                     print("Error deserializing JSON")
                 }

@@ -22,6 +22,7 @@ class WineListViewController: UIViewController, UITableViewDelegate, UITableView
     let storageRef = Storage.storage().reference()
     var isSearching = false
     var keyword = String()
+    private let searchController = UISearchController(searchResultsController: nil)
     
     // MARK: Outlets
     @IBOutlet weak var wineListTableView: UITableView!
@@ -38,8 +39,8 @@ class WineListViewController: UIViewController, UITableViewDelegate, UITableView
         }
         dismiss(animated: true, completion: nil)
     }
-    private let searchController = UISearchController(searchResultsController: nil)
     
+    // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -47,12 +48,10 @@ class WineListViewController: UIViewController, UITableViewDelegate, UITableView
         searchController.searchBar.delegate = self
         wineListTableView.register(UINib.init(nibName: "WineListTableViewCell", bundle: nil), forCellReuseIdentifier: "wineListCell")
 
-
         //Load list of wines from Firebase
         let wineRef = ref.child("Vendor").queryOrdered(byChild: "vendorID").queryEqual(toValue: User.sharedInstance.email)
         wineRef.observe(.value, with: { snapshot in
 
-            print(snapshot.childrenCount)
             var newItems: [WineInfo] = []
             self.listOfLabel.removeAll()
             for item in snapshot.children {
@@ -62,11 +61,9 @@ class WineListViewController: UIViewController, UITableViewDelegate, UITableView
                 let url = URL(string: wineItem.thumbnail)
                 let savedImage = try? Data(contentsOf: url!)
                 self.listOfLabel[wineItem.code] = UIImage(data: savedImage!)!
-                print(wineItem.name)
             }
             
             self.wineList = newItems
-            print("count", self.wineList.count)
             self.wineListTableView.reloadData()
             Indicators.progressIndicator(self.view, startAnimate: false)
         })
@@ -95,7 +92,6 @@ class WineListViewController: UIViewController, UITableViewDelegate, UITableView
     
     //MARK: Search Bar
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
         if wineSearch.text == nil || wineSearch.text == "" {
             isSearching = false
             view.endEditing(true)
@@ -117,8 +113,7 @@ class WineListViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar)
-    {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         self.wineListTableView.reloadData()
         DispatchQueue.main.async {
             self.isSearching = false;

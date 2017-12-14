@@ -33,7 +33,6 @@ class ConsumerTVController: UITableViewController {
         super.viewDidLoad()
  
         let userId = Auth.auth().currentUser!.uid
-        print("@@@@@@!!!!!!: \(userId)")
         
         var consumerZip = "00000"
         
@@ -42,7 +41,6 @@ class ConsumerTVController: UITableViewController {
             if let value = snapshot.value as? NSDictionary {
                 // changing value of consumerZip to user's zipcode : value
                 consumerZip = value["zipCode"] as? String ?? ""
-                print("!!!!!!@@@@@@@!!!!: \(consumerZip)")
             }
             
             // using ref (w/path: Vendor) to query all vendor uploaded wines based on (toValue) "consumerZip"
