@@ -12,23 +12,22 @@ import Firebase
 
 class WineListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate{
     
-    //MARK: Variables
+    // MARK: Properties
     var wineList = [WineInfo]()
     var filteredList = [WineInfo]()
     var selectedWine: WineInfo?
     var listOfLabel = [String:UIImage]()
-    
     var items: [WineInfo] = []
     let ref = Database.database().reference()
     let storageRef = Storage.storage().reference()
-    
     var isSearching = false
     var keyword = String()
     
-    //MARK: Outlets
-    
+    // MARK: Outlets
     @IBOutlet weak var wineListTableView: UITableView!
     @IBOutlet weak var wineSearch: UISearchBar!
+    
+    // MARK: Actions
     @IBAction func signOutButton(_ sender: UIBarButtonItem) {
         let firebaseAuth = Auth.auth()
         do {
@@ -44,8 +43,7 @@ class WineListViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        //////////////////
-        progressIndicator(self.view, startAnimate: true)
+        Indicators.progressIndicator(self.view, startAnimate: true)
         searchController.searchBar.delegate = self
         wineListTableView.register(UINib.init(nibName: "WineListTableViewCell", bundle: nil), forCellReuseIdentifier: "wineListCell")
 
@@ -70,11 +68,11 @@ class WineListViewController: UIViewController, UITableViewDelegate, UITableView
             self.wineList = newItems
             print("count", self.wineList.count)
             self.wineListTableView.reloadData()
-            self.progressIndicator(self.view, startAnimate: false)
+            Indicators.progressIndicator(self.view, startAnimate: false)
         })
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         let wineRef = ref.child("Vendor").queryOrdered(byChild: "vendorID").queryEqual(toValue: User.sharedInstance.email)
         wineRef.observe(.value, with: { snapshot in
             var newItems: [WineInfo] = []
@@ -93,7 +91,6 @@ class WineListViewController: UIViewController, UITableViewDelegate, UITableView
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     //MARK: Search Bar
@@ -116,7 +113,6 @@ class WineListViewController: UIViewController, UITableViewDelegate, UITableView
             default:
                 print("Filter error")
             }
-//            self.filteredList = self.wineList.filter({$0.name.uppercased().contains(searchText.uppercased())})
             self.wineListTableView.reloadData()
         }
     }
@@ -131,10 +127,6 @@ class WineListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     //MARK: Table View
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isSearching{
             return filteredList.count
@@ -161,9 +153,7 @@ class WineListViewController: UIViewController, UITableViewDelegate, UITableView
         cell.quantityLabel.text = "Qty: \(currentWine.quantity)"
         cell.ratingLabel.text = "⭐️ \(currentWine.rating)"
         cell.labelImage.image = listOfLabel[currentWine.code]
-//        let url = URL(string: currentWine.thumbnail)
-//        let savedImage = try? Data(contentsOf: url!)
-//        cell.labelImage.image = UIImage(data: savedImage!)!
+        
         return cell
     }
 
@@ -201,7 +191,6 @@ class WineListViewController: UIViewController, UITableViewDelegate, UITableView
                 }
             })
             wineList.remove(at: indexPath.row)
-//            listOfLabel.remove(at: wineList[indexPath.row].code)
             tableView.reloadData()
         }
     }
@@ -214,41 +203,5 @@ class WineListViewController: UIViewController, UITableViewDelegate, UITableView
             }
             addItemTableViewController.wineData = selectedWine
         }
-    }
-    
-    //Custom Activity Indicator
-    func progressIndicator(_ viewContainer: UIView, startAnimate:Bool? = true) -> UIActivityIndicatorView {
-        let mainContainer: UIView = UIView(frame: viewContainer.frame)
-        mainContainer.center = viewContainer.center
-        mainContainer.backgroundColor = UIColor.white
-        mainContainer.alpha = 0.5
-        mainContainer.tag = 789456123
-        mainContainer.isUserInteractionEnabled = false
-        
-        let viewBackgroundLoading: UIView = UIView(frame: CGRect(x:0,y: 0,width: 80,height: 80))
-        viewBackgroundLoading.center = viewContainer.center
-        viewBackgroundLoading.backgroundColor = UIColor.black
-        viewBackgroundLoading.alpha = 0.5
-        viewBackgroundLoading.clipsToBounds = true
-        viewBackgroundLoading.layer.cornerRadius = 15
-        
-        let activityIndicatorView: UIActivityIndicatorView = UIActivityIndicatorView()
-        activityIndicatorView.frame = CGRect(x:0.0,y: 0.0,width: 40.0, height: 40.0)
-        activityIndicatorView.activityIndicatorViewStyle =
-            UIActivityIndicatorViewStyle.whiteLarge
-        activityIndicatorView.center = CGPoint(x: viewBackgroundLoading.frame.size.width / 2, y: viewBackgroundLoading.frame.size.height / 2)
-        if startAnimate!{
-            viewBackgroundLoading.addSubview(activityIndicatorView)
-            mainContainer.addSubview(viewBackgroundLoading)
-            viewContainer.addSubview(mainContainer)
-            activityIndicatorView.startAnimating()
-        }else{
-            for subview in viewContainer.subviews{
-                if subview.tag == 789456123{
-                    subview.removeFromSuperview()
-                }
-            }
-        }
-        return activityIndicatorView
     }
 }

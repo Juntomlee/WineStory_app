@@ -180,11 +180,9 @@ class LogInViewController: UIViewController, UITextFieldDelegate, GIDSignInUIDel
                         return
                     }
                     let userInfo = ConsumerInfo(uid: user!.uid, email: "n/a", ref: self.ref, key: "", zipCode: text, favorite: ["chateau-pontet-canet-red-bordeaux-blend-pauillac-2011-10", "decoy-pinot-noir-sonoma-county-2011"], cart: ["chateau-pontet-canet-red-bordeaux-blend-pauillac-2011-10" : 5, "decoy-pinot-noir-sonoma-county-2011":3])
-                    print("%%%%%%%$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
                     
                     let userUidRef = self.ref.child(user!.uid)
                     userUidRef.setValue(userInfo.toAnyObject())
-//                    self.performSegue(withIdentifier: "LoginUser", sender: nil)
                 }
             })
         }

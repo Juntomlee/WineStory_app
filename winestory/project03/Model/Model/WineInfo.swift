@@ -57,7 +57,7 @@ class WineInfo: NSObject {
         self.reviewRating = reviewRating
         self.ref = nil
     }
-    // Firebase----------------------
+
     init(snapshot: DataSnapshot) {
         key = snapshot.key
         let snapshotValue = snapshot.value as! [String: AnyObject]

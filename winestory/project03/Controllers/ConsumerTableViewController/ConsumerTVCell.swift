@@ -9,24 +9,10 @@
 import UIKit
 
 class ConsumerTVCell: UITableViewCell {
-
-    
+    // MARK: Outlets
     @IBOutlet weak var wineImage: UIImageView!
     @IBOutlet weak var wineName: UILabel!
     @IBOutlet weak var winePrice: UILabel!
     @IBOutlet weak var wineRank: UILabel!
     @IBOutlet weak var wineSummary: UITextView!
-    
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
 }

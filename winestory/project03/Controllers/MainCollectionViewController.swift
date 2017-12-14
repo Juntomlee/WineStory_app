@@ -14,8 +14,6 @@ import Firebase
 class MainCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout,triggerCollectionViewAnimmationsProtocol, CTBottomSlideDelegate, UISearchBarDelegate, CatalogControlProtocol {
 
 
-    
-
     @IBOutlet weak var wineSearch: UISearchBar!
     //DB reference
     var ref = Database.database().reference()

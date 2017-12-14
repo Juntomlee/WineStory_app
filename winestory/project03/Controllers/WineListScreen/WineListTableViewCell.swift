@@ -9,6 +9,7 @@
 import UIKit
 
 class WineListTableViewCell: UITableViewCell {
+    // MARK: Outlets
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var grapeTypeLabel: UILabel!
     @IBOutlet weak var vineyardLabel: UILabel!
@@ -16,12 +17,4 @@ class WineListTableViewCell: UITableViewCell {
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var ratingLabel: UILabel!
     @IBOutlet weak var labelImage: UIImageView!
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-    }
 }

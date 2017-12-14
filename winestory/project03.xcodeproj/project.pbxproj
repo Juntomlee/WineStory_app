@@ -44,6 +44,7 @@
 		A0DDF52A1FB12D44009E9201 /* SearchCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0DDF5291FB12D44009E9201 /* SearchCollectionReusableView.swift */; };
 		A0FC426C1FB17DF600F56765 /* ShopMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FC426B1FB17DF600F56765 /* ShopMenuViewController.swift */; };
 		A3D36B6D8755671EFA698D38 /* Pods_project03Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41744CB2B80E4F071423FDF2 /* Pods_project03Tests.framework */; };
+		BFB8D1561FE307B900EFF68E /* Indicators.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFB8D1551FE307B900EFF68E /* Indicators.swift */; };
 		DB0095525D0DC6060A48F2FC /* Pods_project03UITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FCD0C64E3D70BBE7B331C8C /* Pods_project03UITests.framework */; };
 /* End PBXBuildFile section */
 
@@ -113,6 +114,7 @@
 		A0C5198E1FAB92EF002C9CFE /* PullUPBottomVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PullUPBottomVC.swift; sourceTree = "<group>"; };
 		A0DDF5291FB12D44009E9201 /* SearchCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCollectionReusableView.swift; sourceTree = "<group>"; };
 		A0FC426B1FB17DF600F56765 /* ShopMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopMenuViewController.swift; sourceTree = "<group>"; };
+		BFB8D1551FE307B900EFF68E /* Indicators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Indicators.swift; sourceTree = "<group>"; };
 		D99A71B451801EF81B4CA50E /* Pods_project03.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_project03.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB50E4D008E73B4D13EFC9A5 /* Pods-project03Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-project03Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-project03Tests/Pods-project03Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		F62026CBC3CB947FBE39F9C1 /* Pods-project03.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-project03.release.xcconfig"; path = "Pods/Target Support Files/Pods-project03/Pods-project03.release.xcconfig"; sourceTree = "<group>"; };
@@ -174,7 +176,7 @@
 		A006A47D1FAF9396007DCC47 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				A033C4621FB6006600865341 /* New Group */,
+				A033C4621FB6006600865341 /* ConsumerTableViewController */,
 				A08CE0FA1FB396E000963BD1 /* WineListScreen */,
 				A08CE0EF1FB393B400963BD1 /* CustomerListScreen */,
 				A08CE0EC1FB3939700963BD1 /* AddWineScreen */,
@@ -274,14 +276,14 @@
 			path = "Custom Cells";
 			sourceTree = "<group>";
 		};
-		A033C4621FB6006600865341 /* New Group */ = {
+		A033C4621FB6006600865341 /* ConsumerTableViewController */ = {
 			isa = PBXGroup;
 			children = (
 				A033C4631FB6006600865341 /* ConsumerTVController.swift */,
 				A033C4641FB6006600865341 /* ConsumerTVCell.swift */,
 				A033C4651FB6006600865341 /* LogInViewController.swift */,
 			);
-			path = "New Group";
+			path = ConsumerTableViewController;
 			sourceTree = "<group>";
 		};
 		A08CE0E11FB3938900963BD1 /* Model */ = {
@@ -307,9 +309,9 @@
 		A08CE0EF1FB393B400963BD1 /* CustomerListScreen */ = {
 			isa = PBXGroup;
 			children = (
+				A08CE0F21FB393B400963BD1 /* CustomerListTableViewController.swift */,
 				A08CE0F01FB393B400963BD1 /* CustomerListTableViewCell.swift */,
 				A08CE0F11FB393B400963BD1 /* CustomerListTableViewCell.xib */,
-				A08CE0F21FB393B400963BD1 /* CustomerListTableViewController.swift */,
 			);
 			path = CustomerListScreen;
 			sourceTree = "<group>";
@@ -328,6 +330,7 @@
 			isa = PBXGroup;
 			children = (
 				A0C518C61FA2F870002C9CFE /* globalFunctions.swift */,
+				BFB8D1551FE307B900EFF68E /* Indicators.swift */,
 			);
 			path = "Global Functions";
 			sourceTree = "<group>";
@@ -678,6 +681,7 @@
 				A021215E1FA036DE006AA4C0 /* AppDelegate.swift in Sources */,
 				A033C4671FB6006700865341 /* ConsumerTVCell.swift in Sources */,
 				A0C5198F1FAB92EF002C9CFE /* PullUPBottomVC.swift in Sources */,
+				BFB8D1561FE307B900EFF68E /* Indicators.swift in Sources */,
 				A02121901FA0380B006AA4C0 /* MainCollectionViewCell.swift in Sources */,
 				A033C4681FB6006700865341 /* LogInViewController.swift in Sources */,
 				A033C46A1FB6023D00865341 /* User.swift in Sources */,

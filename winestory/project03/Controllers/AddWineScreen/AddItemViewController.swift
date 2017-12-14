@@ -12,7 +12,7 @@ import Foundation
 
 class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
-    //MARK: Variables
+    // MARK: Properties
     var wineData: WineInfo?
     var wineList = [WineInfo]()
     var review: Review?
@@ -49,8 +49,6 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
     @IBOutlet weak var labelImage: UIImageView!
     @IBOutlet weak var reviewText: UITextField!
     @IBOutlet weak var reviewRatingText: UITextField!
-    
-    
     @IBOutlet weak var wineSegment: UISegmentedControl!
     @IBOutlet weak var addItemView: UIView!
     @IBOutlet weak var addImageView: UIView!
@@ -178,7 +176,6 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     func loadData() {
-        print("@@@@@@@@@@", wineData?.name, "@@@@@@@@@@")
         guard let currentData = wineData else {
             fatalError()
         }
@@ -203,7 +200,7 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
         WID = currentData.code
         
         //Ends loading indicator
-        progressIndicator(self.view, startAnimate: false)
+        Indicators.progressIndicator(self.view, startAnimate: false)
     }
     
     func getData() {
@@ -277,7 +274,6 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
             
             wineItemRef.setValue(wineItem.toAnyObject())
 
-            ///////END////////
             self.resetTextFields()
             self.wineScrollView.setContentOffset(CGPoint(x: 0, y:0), animated: true)
         }
@@ -336,7 +332,7 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     func uploadImage() {
         //Start loading indicator
-        progressIndicator(self.view, startAnimate: true)
+        Indicators.progressIndicator(self.view, startAnimate: true)
         imageName = NSUUID().uuidString // Assigned unique ID for image
         
         // Root reference
@@ -353,11 +349,7 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
                 self.downloadURL = (metadata?.downloadURL()?.absoluteString)!
                 if self.codeText.text != self.WID{
                     DispatchQueue.main.async {
-//                        if self.referenceVariable == true{
-//                            print("f u")
-//                        } else {
-                            self.shortenURL()
-//                        }
+                        self.shortenURL()
                     }
                 } else if self.codeText.text == self.WID {
                     DispatchQueue.main.async {
@@ -377,7 +369,6 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
                 self.thumbnailURL = (metadata?.downloadURL()?.absoluteString)!
             })
         }
-        print("Image uploaded")
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
@@ -456,7 +447,7 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
                                         }
                                     }
                                     if self.WID == "NA" {
-                                        self.progressIndicator(self.view, startAnimate: false)
+                                        Indicators.progressIndicator(self.view, startAnimate: false)
                                         self.textFieldAlert("Wine not found")
                                     }
                                 }
@@ -573,16 +564,6 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
                                 }
                                 region = item["region"] as! String
                                 summary = item["wm_notes"] as! String
-                                print("name",item["name"])
-                                print("vintage", item["vintage"])
-                                print("code", item["code"])
-                                print("avgPrice", item["price"])
-                                print("snoothrank", item["snoothrank"])
-                                print("wineType", item["type"])
-                                print("winery", item["winery"])
-                                print("region", item["region"])
-                                print("summary", item["wm_notes"])
-                                print("rank", item["snoothrank"])
                             }
                             // Update winedata object
                             self.wineData = WineInfo(uuid: self.imageName, name: name, code: code, wineType: wineType, vendorPrice: Double("0")!, price: Double(avgPrice)!, zipcode: "", region: region, vintage: Int(vintage)!, vineyard: winery, summary: summary, quantity: Int("0")!, labelImage: self.downloadURL, thumbnail: self.thumbnailURL, color: self.color, rating: String(rank), vendorID: User.sharedInstance.email, review: "n/a", reviewRating: 0 )
@@ -618,14 +599,12 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
             if error == nil,let usableData = data {
                 print("JSON Received...File Size: \(usableData) \n")
                 do {
-                    // Serialize....
                     let object = try JSONSerialization.jsonObject(with: usableData, options: .allowFragments)
                     
                     if let dictionary = object as? [String: AnyObject]{
                         if let wine = dictionary["wines"] as? [[String: AnyObject]]{
                             for item in wine {
                                 if let reviews = item["reviews"] as? [[String:AnyObject]]{
-                                    //                                    print("review", reviews)
                                     print(reviews.count)
                                     for review in reviews{
                                         if let  reviewerName = review["name"] {
@@ -642,9 +621,6 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
                                         reviewBody = review["body"] as! String
                                         rating = review["rating"] as! String
                                         let currentRating = reviewer1.replacingOccurrences(of: ".", with: "-")
-//                                        print(review["name"])
-//                                        print(review["body"])
-//                                        print(review["rating"])
                                         let reviewData = Review(wineID: self.WID, reviewerID: reviewerID, rating: currentRating, review: reviewBody)
                                         self.reviewList.append(reviewData)
                                     }
@@ -668,41 +644,5 @@ class AddItemViewController: UIViewController, UIImagePickerControllerDelegate, 
             }
         }
         task.resume()
-    }
-    
-    //Custom Activity Indicator
-    func progressIndicator(_ viewContainer: UIView, startAnimate:Bool? = true) -> UIActivityIndicatorView {
-        let mainContainer: UIView = UIView(frame: viewContainer.frame)
-        mainContainer.center = viewContainer.center
-        mainContainer.backgroundColor = UIColor.white
-        mainContainer.alpha = 0.5
-        mainContainer.tag = 789456123
-        mainContainer.isUserInteractionEnabled = false
-        
-        let viewBackgroundLoading: UIView = UIView(frame: CGRect(x:0,y: 0,width: 80,height: 80))
-        viewBackgroundLoading.center = viewContainer.center
-        viewBackgroundLoading.backgroundColor = UIColor.black
-        viewBackgroundLoading.alpha = 0.5
-        viewBackgroundLoading.clipsToBounds = true
-        viewBackgroundLoading.layer.cornerRadius = 15
-        
-        let activityIndicatorView: UIActivityIndicatorView = UIActivityIndicatorView()
-        activityIndicatorView.frame = CGRect(x:0.0,y: 0.0,width: 40.0, height: 40.0)
-        activityIndicatorView.activityIndicatorViewStyle =
-            UIActivityIndicatorViewStyle.whiteLarge
-        activityIndicatorView.center = CGPoint(x: viewBackgroundLoading.frame.size.width / 2, y: viewBackgroundLoading.frame.size.height / 2)
-        if startAnimate!{
-            viewBackgroundLoading.addSubview(activityIndicatorView)
-            mainContainer.addSubview(viewBackgroundLoading)
-            viewContainer.addSubview(mainContainer)
-            activityIndicatorView.startAnimating()
-        }else{
-            for subview in viewContainer.subviews{
-                if subview.tag == 789456123{
-                    subview.removeFromSuperview()
-                }
-            }
-        }
-        return activityIndicatorView
     }
 }
